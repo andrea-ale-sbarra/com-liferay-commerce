@@ -62,16 +62,6 @@ components:
             type: object
         Product:
             properties:
-                allowedOrderQuantities:
-                    example:
-                        - 10
-                        - 20
-                        - 30
-                        - 40
-                    items:
-                        format: int32
-                        type: integer
-                    type: array
                 createDate:
                     format: date
                     type: string
@@ -89,18 +79,12 @@ components:
                     minimum: 0
                     readOnly: true
                     type: integer
-                maxOrderQuantity:
-                    format: int32
-                    type: integer
                 metaDescription:
                     type: string
                 metaKeyword:
                     type: string
                 metaTitle:
                     type: string
-                minOrderQuantity:
-                    format: int32
-                    type: integer
                 modifiedDate:
                     format: date
                     type: string
@@ -137,8 +121,23 @@ components:
             type: object
         Sku:
             properties:
+                allowedOrderQuantities:
+                    example:
+                        - 10
+                        - 20
+                        - 30
+                        - 40
+                    items:
+                        type: string
+                    type: array
                 availability:
                     $ref: "#/components/schemas/Availability"
+                maxOrderQuantity:
+                    format: int32
+                    type: integer
+                minOrderQuantity:
+                    format: int32
+                    type: integer
                 price:
                     $ref: "#/components/schemas/Price"
                 sku:
