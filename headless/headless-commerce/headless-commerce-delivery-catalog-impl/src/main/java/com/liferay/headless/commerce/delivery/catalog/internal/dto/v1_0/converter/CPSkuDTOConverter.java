@@ -15,8 +15,14 @@
 package com.liferay.headless.commerce.delivery.catalog.internal.dto.v1_0.converter;
 
 import com.liferay.commerce.currency.util.CommercePriceFormatter;
+import com.liferay.commerce.inventory.CPDefinitionInventoryEngine;
+import com.liferay.commerce.inventory.CPDefinitionInventoryEngineRegistry;
+import com.liferay.commerce.model.CPDefinitionInventory;
 import com.liferay.commerce.product.catalog.CPSku;
 import com.liferay.commerce.product.content.util.CPContentHelper;
+import com.liferay.commerce.product.model.CPInstance;
+import com.liferay.commerce.product.service.CPInstanceLocalService;
+import com.liferay.commerce.service.CPDefinitionInventoryLocalService;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverter;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverterContext;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverterRegistry;
@@ -51,9 +57,28 @@ public class CPSkuDTOConverter implements DTOConverter {
 
 		CPSku cpSku = cpSkuDTOConverterConvertContext.getCPSku();
 
+		CPInstance cpInstance = _cpInstanceLocalService.getCPInstance(
+			cpSku.getCPInstanceId());
+
+		CPDefinitionInventory cpDefinitionInventory =
+			_cpDefinitionInventoryLocalService.
+				fetchCPDefinitionInventoryByCPDefinitionId(
+					cpSkuDTOConverterConvertContext.getCPDefinitionId());
+
+		CPDefinitionInventoryEngine cpDefinitionInventoryEngine =
+			_cpDefinitionInventoryEngineRegistry.getCPDefinitionInventoryEngine(
+				cpDefinitionInventory);
+
 		return new Sku() {
 			{
+				allowedOrderQuantities =
+					cpDefinitionInventoryEngine.getAllowedOrderQuantities(
+						cpInstance);
 				availability = _getAvailability(cpSku);
+				maxOrderQuantity =
+					cpDefinitionInventoryEngine.getMinOrderQuantity(cpInstance);
+				minOrderQuantity =
+					cpDefinitionInventoryEngine.getMinOrderQuantity(cpInstance);
 				price = _getPrice(
 					cpSku, cpSkuDTOConverterConvertContext.getLocale());
 				sku = cpSku.getSku();
@@ -89,6 +114,17 @@ public class CPSkuDTOConverter implements DTOConverter {
 
 	@Reference
 	private CPContentHelper _cpContentHelper;
+
+	@Reference
+	private CPDefinitionInventoryEngineRegistry
+		_cpDefinitionInventoryEngineRegistry;
+
+	@Reference
+	private CPDefinitionInventoryLocalService
+		_cpDefinitionInventoryLocalService;
+
+	@Reference
+	private CPInstanceLocalService _cpInstanceLocalService;
 
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;

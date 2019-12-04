@@ -25,11 +25,16 @@ import java.util.Locale;
 public class CPSkuDTOConverterContext extends DefaultDTOConverterContext {
 
 	public CPSkuDTOConverterContext(
-		Locale locale, long resourcePrimKey, CPSku cpSku) {
+		Locale locale, long resourcePrimKey, CPSku cpSku, long cpDefinitionId) {
 
 		super(locale, resourcePrimKey);
 
 		_cpSku = cpSku;
+		_cpDefinitionId = cpDefinitionId;
+	}
+
+	public long getCPDefinitionId() {
+		return _cpDefinitionId;
 	}
 
 	public CPSku getCPSku() {
@@ -37,5 +42,7 @@ public class CPSkuDTOConverterContext extends DefaultDTOConverterContext {
 	}
 
 	private CPSku _cpSku;
+
+	long _cpDefinitionId;
 
 }

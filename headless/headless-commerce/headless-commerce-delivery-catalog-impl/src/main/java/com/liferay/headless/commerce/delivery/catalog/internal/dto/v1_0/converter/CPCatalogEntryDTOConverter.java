@@ -16,12 +16,14 @@ package com.liferay.headless.commerce.delivery.catalog.internal.dto.v1_0.convert
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagService;
+import com.liferay.commerce.inventory.CPDefinitionInventoryEngineRegistry;
 import com.liferay.commerce.product.catalog.CPCatalogEntry;
 import com.liferay.commerce.product.catalog.CPSku;
 import com.liferay.commerce.product.content.util.CPContentHelper;
 import com.liferay.commerce.product.model.CPDefinition;
 import com.liferay.commerce.product.model.CProduct;
 import com.liferay.commerce.product.service.CPDefinitionService;
+import com.liferay.commerce.product.service.CPInstanceLocalService;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverter;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverterContext;
@@ -29,6 +31,8 @@ import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverterRegistr
 import com.liferay.headless.commerce.delivery.catalog.dto.v1_0.Product;
 import com.liferay.headless.commerce.delivery.catalog.dto.v1_0.Sku;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.service.CompanyLocalService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,37 +74,33 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 		ExpandoBridge expandoBridge = cpDefinition.getExpandoBridge();
 		CProduct cProduct = cpDefinition.getCProduct();
 
+		Company company = _companyLocalService.getCompany(
+			cpDefinition.getCompanyId());
+
+		String portalURL = company.getPortalURL(0);
+
 		return new Product() {
 			{
-
-				// allowedOrderQuantities
-
 				createDate = cpDefinition.getCreateDate();
 				description = cpCatalogEntry.getDescription();
 				expando = expandoBridge.getAttributes();
 				externalReferenceCode = cProduct.getExternalReferenceCode();
 				id = cpCatalogEntry.getCPDefinitionId();
-
-				// maxOrderQuantity
-
 				metaDescription = cpCatalogEntry.getMetaDescription(languageId);
 				metaKeyword = cpCatalogEntry.getMetaKeywords(languageId);
 				metaTitle = cpCatalogEntry.getMetaTitle(languageId);
-
-				// minOrderQuantity
-
 				modifiedDate = cpDefinition.getModifiedDate();
-
 				name = cpCatalogEntry.getName();
 				productId = cpCatalogEntry.getCProductId();
 				productType = cpCatalogEntry.getProductTypeName();
 				shortDescription = cpCatalogEntry.getShortDescription();
 				skus = _toSkus(
 					cpCatalogEntry.getCPSkus(),
-					cpCatalogEntryDTOConverterConvertContext.getLocale());
+					cpCatalogEntryDTOConverterConvertContext.getLocale(),
+					cpDefinition.getCPDefinitionId());
 				tags = _getTags(cpDefinition);
 				url = cpCatalogEntry.getUrl();
-				urlImage = cpCatalogEntry.getDefaultImageFileUrl();
+				urlImage = portalURL + cpCatalogEntry.getDefaultImageFileUrl();
 			}
 		};
 	}
@@ -118,7 +118,10 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 		);
 	}
 
-	private Sku[] _toSkus(List<CPSku> cpSkus, Locale locale) throws Exception {
+	private Sku[] _toSkus(
+			List<CPSku> cpSkus, Locale locale, long cpDefinitionId)
+		throws Exception {
+
 		List<Sku> skus = new ArrayList<>();
 		DTOConverter cpSkuDTOConverter = _dtoConverterRegistry.getDTOConverter(
 			CPSku.class.getName());
@@ -127,7 +130,8 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 			skus.add(
 				(Sku)cpSkuDTOConverter.toDTO(
 					new CPSkuDTOConverterContext(
-						locale, cpSku.getCPInstanceId(), cpSku)));
+						locale, cpSku.getCPInstanceId(), cpSku,
+						cpDefinitionId)));
 		}
 
 		Stream<Sku> stream = skus.stream();
@@ -139,10 +143,20 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 	private AssetTagService _assetTagService;
 
 	@Reference
+	private CompanyLocalService _companyLocalService;
+
+	@Reference
 	private CPContentHelper _cpContentHelper;
 
 	@Reference
+	private CPDefinitionInventoryEngineRegistry
+		_cpDefinitionInventoryEngineRegistry;
+
+	@Reference
 	private CPDefinitionService _cpDefinitionService;
+
+	@Reference
+	private CPInstanceLocalService _cpInstanceLocalService;
 
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;
