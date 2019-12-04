@@ -28,6 +28,28 @@ import javax.annotation.Generated;
 @Generated("")
 public class Sku {
 
+	public String[] getAllowedOrderQuantities() {
+		return allowedOrderQuantities;
+	}
+
+	public void setAllowedOrderQuantities(String[] allowedOrderQuantities) {
+		this.allowedOrderQuantities = allowedOrderQuantities;
+	}
+
+	public void setAllowedOrderQuantities(
+		UnsafeSupplier<String[], Exception>
+			allowedOrderQuantitiesUnsafeSupplier) {
+
+		try {
+			allowedOrderQuantities = allowedOrderQuantitiesUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String[] allowedOrderQuantities;
+
 	public Availability getAvailability() {
 		return availability;
 	}
@@ -48,6 +70,48 @@ public class Sku {
 	}
 
 	protected Availability availability;
+
+	public Integer getMaxOrderQuantity() {
+		return maxOrderQuantity;
+	}
+
+	public void setMaxOrderQuantity(Integer maxOrderQuantity) {
+		this.maxOrderQuantity = maxOrderQuantity;
+	}
+
+	public void setMaxOrderQuantity(
+		UnsafeSupplier<Integer, Exception> maxOrderQuantityUnsafeSupplier) {
+
+		try {
+			maxOrderQuantity = maxOrderQuantityUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Integer maxOrderQuantity;
+
+	public Integer getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(Integer minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(
+		UnsafeSupplier<Integer, Exception> minOrderQuantityUnsafeSupplier) {
+
+		try {
+			minOrderQuantity = minOrderQuantityUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Integer minOrderQuantity;
 
 	public Price getPrice() {
 		return price;

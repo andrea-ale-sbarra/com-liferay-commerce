@@ -52,35 +52,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Product {
 
 	@Schema
-	public Integer[] getAllowedOrderQuantities() {
-		return allowedOrderQuantities;
-	}
-
-	public void setAllowedOrderQuantities(Integer[] allowedOrderQuantities) {
-		this.allowedOrderQuantities = allowedOrderQuantities;
-	}
-
-	@JsonIgnore
-	public void setAllowedOrderQuantities(
-		UnsafeSupplier<Integer[], Exception>
-			allowedOrderQuantitiesUnsafeSupplier) {
-
-		try {
-			allowedOrderQuantities = allowedOrderQuantitiesUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Integer[] allowedOrderQuantities;
-
-	@Schema
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -221,34 +192,6 @@ public class Product {
 	protected Long id;
 
 	@Schema
-	public Integer getMaxOrderQuantity() {
-		return maxOrderQuantity;
-	}
-
-	public void setMaxOrderQuantity(Integer maxOrderQuantity) {
-		this.maxOrderQuantity = maxOrderQuantity;
-	}
-
-	@JsonIgnore
-	public void setMaxOrderQuantity(
-		UnsafeSupplier<Integer, Exception> maxOrderQuantityUnsafeSupplier) {
-
-		try {
-			maxOrderQuantity = maxOrderQuantityUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Integer maxOrderQuantity;
-
-	@Schema
 	public String getMetaDescription() {
 		return metaDescription;
 	}
@@ -331,34 +274,6 @@ public class Product {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String metaTitle;
-
-	@Schema
-	public Integer getMinOrderQuantity() {
-		return minOrderQuantity;
-	}
-
-	public void setMinOrderQuantity(Integer minOrderQuantity) {
-		this.minOrderQuantity = minOrderQuantity;
-	}
-
-	@JsonIgnore
-	public void setMinOrderQuantity(
-		UnsafeSupplier<Integer, Exception> minOrderQuantityUnsafeSupplier) {
-
-		try {
-			minOrderQuantity = minOrderQuantityUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Integer minOrderQuantity;
 
 	@Schema
 	public Date getModifiedDate() {
@@ -666,26 +581,6 @@ public class Product {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (allowedOrderQuantities != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"allowedOrderQuantities\": ");
-
-			sb.append("[");
-
-			for (int i = 0; i < allowedOrderQuantities.length; i++) {
-				sb.append(allowedOrderQuantities[i]);
-
-				if ((i + 1) < allowedOrderQuantities.length) {
-					sb.append(", ");
-				}
-			}
-
-			sb.append("]");
-		}
-
 		if (createDate != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -748,16 +643,6 @@ public class Product {
 			sb.append(id);
 		}
 
-		if (maxOrderQuantity != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"maxOrderQuantity\": ");
-
-			sb.append(maxOrderQuantity);
-		}
-
 		if (metaDescription != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -798,16 +683,6 @@ public class Product {
 			sb.append(_escape(metaTitle));
 
 			sb.append("\"");
-		}
-
-		if (minOrderQuantity != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"minOrderQuantity\": ");
-
-			sb.append(minOrderQuantity);
 		}
 
 		if (modifiedDate != null) {

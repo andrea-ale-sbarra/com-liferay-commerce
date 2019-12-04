@@ -47,6 +47,35 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Sku {
 
 	@Schema
+	public String[] getAllowedOrderQuantities() {
+		return allowedOrderQuantities;
+	}
+
+	public void setAllowedOrderQuantities(String[] allowedOrderQuantities) {
+		this.allowedOrderQuantities = allowedOrderQuantities;
+	}
+
+	@JsonIgnore
+	public void setAllowedOrderQuantities(
+		UnsafeSupplier<String[], Exception>
+			allowedOrderQuantitiesUnsafeSupplier) {
+
+		try {
+			allowedOrderQuantities = allowedOrderQuantitiesUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String[] allowedOrderQuantities;
+
+	@Schema
 	@Valid
 	public Availability getAvailability() {
 		return availability;
@@ -74,6 +103,62 @@ public class Sku {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Availability availability;
+
+	@Schema
+	public Integer getMaxOrderQuantity() {
+		return maxOrderQuantity;
+	}
+
+	public void setMaxOrderQuantity(Integer maxOrderQuantity) {
+		this.maxOrderQuantity = maxOrderQuantity;
+	}
+
+	@JsonIgnore
+	public void setMaxOrderQuantity(
+		UnsafeSupplier<Integer, Exception> maxOrderQuantityUnsafeSupplier) {
+
+		try {
+			maxOrderQuantity = maxOrderQuantityUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Integer maxOrderQuantity;
+
+	@Schema
+	public Integer getMinOrderQuantity() {
+		return minOrderQuantity;
+	}
+
+	public void setMinOrderQuantity(Integer minOrderQuantity) {
+		this.minOrderQuantity = minOrderQuantity;
+	}
+
+	@JsonIgnore
+	public void setMinOrderQuantity(
+		UnsafeSupplier<Integer, Exception> minOrderQuantityUnsafeSupplier) {
+
+		try {
+			minOrderQuantity = minOrderQuantityUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Integer minOrderQuantity;
 
 	@Schema
 	@Valid
@@ -155,6 +240,30 @@ public class Sku {
 
 		sb.append("{");
 
+		if (allowedOrderQuantities != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"allowedOrderQuantities\": ");
+
+			sb.append("[");
+
+			for (int i = 0; i < allowedOrderQuantities.length; i++) {
+				sb.append("\"");
+
+				sb.append(_escape(allowedOrderQuantities[i]));
+
+				sb.append("\"");
+
+				if ((i + 1) < allowedOrderQuantities.length) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
+
 		if (availability != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -163,6 +272,26 @@ public class Sku {
 			sb.append("\"availability\": ");
 
 			sb.append(String.valueOf(availability));
+		}
+
+		if (maxOrderQuantity != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"maxOrderQuantity\": ");
+
+			sb.append(maxOrderQuantity);
+		}
+
+		if (minOrderQuantity != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"minOrderQuantity\": ");
+
+			sb.append(minOrderQuantity);
 		}
 
 		if (price != null) {

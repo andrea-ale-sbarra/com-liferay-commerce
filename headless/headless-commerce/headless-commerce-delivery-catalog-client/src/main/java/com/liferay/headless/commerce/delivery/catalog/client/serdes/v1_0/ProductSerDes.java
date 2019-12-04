@@ -61,28 +61,6 @@ public class ProductSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (product.getAllowedOrderQuantities() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"allowedOrderQuantities\": ");
-
-			sb.append("[");
-
-			for (int i = 0; i < product.getAllowedOrderQuantities().length;
-				 i++) {
-
-				sb.append(product.getAllowedOrderQuantities()[i]);
-
-				if ((i + 1) < product.getAllowedOrderQuantities().length) {
-					sb.append(", ");
-				}
-			}
-
-			sb.append("]");
-		}
-
 		if (product.getCreateDate() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -145,16 +123,6 @@ public class ProductSerDes {
 			sb.append(product.getId());
 		}
 
-		if (product.getMaxOrderQuantity() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"maxOrderQuantity\": ");
-
-			sb.append(product.getMaxOrderQuantity());
-		}
-
 		if (product.getMetaDescription() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -195,16 +163,6 @@ public class ProductSerDes {
 			sb.append(_escape(product.getMetaTitle()));
 
 			sb.append("\"");
-		}
-
-		if (product.getMinOrderQuantity() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"minOrderQuantity\": ");
-
-			sb.append(product.getMinOrderQuantity());
 		}
 
 		if (product.getModifiedDate() != null) {
@@ -377,15 +335,6 @@ public class ProductSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (product.getAllowedOrderQuantities() == null) {
-			map.put("allowedOrderQuantities", null);
-		}
-		else {
-			map.put(
-				"allowedOrderQuantities",
-				String.valueOf(product.getAllowedOrderQuantities()));
-		}
-
 		map.put(
 			"createDate",
 			liferayToJSONDateFormat.format(product.getCreateDate()));
@@ -420,15 +369,6 @@ public class ProductSerDes {
 			map.put("id", String.valueOf(product.getId()));
 		}
 
-		if (product.getMaxOrderQuantity() == null) {
-			map.put("maxOrderQuantity", null);
-		}
-		else {
-			map.put(
-				"maxOrderQuantity",
-				String.valueOf(product.getMaxOrderQuantity()));
-		}
-
 		if (product.getMetaDescription() == null) {
 			map.put("metaDescription", null);
 		}
@@ -450,15 +390,6 @@ public class ProductSerDes {
 		}
 		else {
 			map.put("metaTitle", String.valueOf(product.getMetaTitle()));
-		}
-
-		if (product.getMinOrderQuantity() == null) {
-			map.put("minOrderQuantity", null);
-		}
-		else {
-			map.put(
-				"minOrderQuantity",
-				String.valueOf(product.getMinOrderQuantity()));
 		}
 
 		map.put(
@@ -552,13 +483,7 @@ public class ProductSerDes {
 			Product product, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "allowedOrderQuantities")) {
-				if (jsonParserFieldValue != null) {
-					product.setAllowedOrderQuantities(
-						toIntegers((Object[])jsonParserFieldValue));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "createDate")) {
+			if (Objects.equals(jsonParserFieldName, "createDate")) {
 				if (jsonParserFieldValue != null) {
 					product.setCreateDate(toDate((String)jsonParserFieldValue));
 				}
@@ -587,12 +512,6 @@ public class ProductSerDes {
 					product.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "maxOrderQuantity")) {
-				if (jsonParserFieldValue != null) {
-					product.setMaxOrderQuantity(
-						Integer.valueOf((String)jsonParserFieldValue));
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "metaDescription")) {
 				if (jsonParserFieldValue != null) {
 					product.setMetaDescription((String)jsonParserFieldValue);
@@ -606,12 +525,6 @@ public class ProductSerDes {
 			else if (Objects.equals(jsonParserFieldName, "metaTitle")) {
 				if (jsonParserFieldValue != null) {
 					product.setMetaTitle((String)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "minOrderQuantity")) {
-				if (jsonParserFieldValue != null) {
-					product.setMinOrderQuantity(
-						Integer.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "modifiedDate")) {

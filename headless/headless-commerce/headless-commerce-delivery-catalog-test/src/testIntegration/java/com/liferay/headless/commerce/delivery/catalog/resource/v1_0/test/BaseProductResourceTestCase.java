@@ -561,16 +561,6 @@ public abstract class BaseProductResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
-					"allowedOrderQuantities", additionalAssertFieldName)) {
-
-				if (product.getAllowedOrderQuantities() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("createDate", additionalAssertFieldName)) {
 				if (product.getCreateDate() == null) {
 					valid = false;
@@ -605,14 +595,6 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("maxOrderQuantity", additionalAssertFieldName)) {
-				if (product.getMaxOrderQuantity() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("metaDescription", additionalAssertFieldName)) {
 				if (product.getMetaDescription() == null) {
 					valid = false;
@@ -631,14 +613,6 @@ public abstract class BaseProductResourceTestCase {
 
 			if (Objects.equals("metaTitle", additionalAssertFieldName)) {
 				if (product.getMetaTitle() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("minOrderQuantity", additionalAssertFieldName)) {
-				if (product.getMinOrderQuantity() == null) {
 					valid = false;
 				}
 
@@ -780,19 +754,6 @@ public abstract class BaseProductResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
-					"allowedOrderQuantities", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						product1.getAllowedOrderQuantities(),
-						product2.getAllowedOrderQuantities())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("createDate", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						product1.getCreateDate(), product2.getCreateDate())) {
@@ -844,17 +805,6 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("maxOrderQuantity", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						product1.getMaxOrderQuantity(),
-						product2.getMaxOrderQuantity())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("metaDescription", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						product1.getMetaDescription(),
@@ -879,17 +829,6 @@ public abstract class BaseProductResourceTestCase {
 			if (Objects.equals("metaTitle", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						product1.getMetaTitle(), product2.getMetaTitle())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("minOrderQuantity", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						product1.getMinOrderQuantity(),
-						product2.getMinOrderQuantity())) {
 
 					return false;
 				}
@@ -1042,17 +981,6 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("maxOrderQuantity", fieldName)) {
-				if (!Objects.deepEquals(
-						product.getMaxOrderQuantity(),
-						jsonObject.getInt("maxOrderQuantity"))) {
-
-					return false;
-				}
-
-				continue;
-			}
-
 			if (Objects.equals("metaDescription", fieldName)) {
 				if (!Objects.deepEquals(
 						product.getMetaDescription(),
@@ -1079,17 +1007,6 @@ public abstract class BaseProductResourceTestCase {
 				if (!Objects.deepEquals(
 						product.getMetaTitle(),
 						jsonObject.getString("metaTitle"))) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("minOrderQuantity", fieldName)) {
-				if (!Objects.deepEquals(
-						product.getMinOrderQuantity(),
-						jsonObject.getInt("minOrderQuantity"))) {
 
 					return false;
 				}
@@ -1229,11 +1146,6 @@ public abstract class BaseProductResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		if (entityFieldName.equals("allowedOrderQuantities")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("createDate")) {
 			if (operator.equals("between")) {
 				sb = new StringBundler();
@@ -1291,11 +1203,6 @@ public abstract class BaseProductResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("maxOrderQuantity")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("metaDescription")) {
 			sb.append("'");
 			sb.append(String.valueOf(product.getMetaDescription()));
@@ -1318,11 +1225,6 @@ public abstract class BaseProductResourceTestCase {
 			sb.append("'");
 
 			return sb.toString();
-		}
-
-		if (entityFieldName.equals("minOrderQuantity")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
 		}
 
 		if (entityFieldName.equals("modifiedDate")) {
@@ -1444,11 +1346,9 @@ public abstract class BaseProductResourceTestCase {
 				description = RandomTestUtil.randomString();
 				externalReferenceCode = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
-				maxOrderQuantity = RandomTestUtil.randomInt();
 				metaDescription = RandomTestUtil.randomString();
 				metaKeyword = RandomTestUtil.randomString();
 				metaTitle = RandomTestUtil.randomString();
-				minOrderQuantity = RandomTestUtil.randomInt();
 				modifiedDate = RandomTestUtil.nextDate();
 				multipleOrderQuantity = RandomTestUtil.randomInt();
 				name = RandomTestUtil.randomString();

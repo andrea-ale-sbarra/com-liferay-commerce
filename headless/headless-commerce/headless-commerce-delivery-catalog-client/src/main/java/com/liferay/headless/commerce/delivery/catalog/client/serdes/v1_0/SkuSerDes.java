@@ -53,6 +53,30 @@ public class SkuSerDes {
 
 		sb.append("{");
 
+		if (sku.getAllowedOrderQuantities() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"allowedOrderQuantities\": ");
+
+			sb.append("[");
+
+			for (int i = 0; i < sku.getAllowedOrderQuantities().length; i++) {
+				sb.append("\"");
+
+				sb.append(_escape(sku.getAllowedOrderQuantities()[i]));
+
+				sb.append("\"");
+
+				if ((i + 1) < sku.getAllowedOrderQuantities().length) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
+
 		if (sku.getAvailability() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -61,6 +85,26 @@ public class SkuSerDes {
 			sb.append("\"availability\": ");
 
 			sb.append(String.valueOf(sku.getAvailability()));
+		}
+
+		if (sku.getMaxOrderQuantity() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"maxOrderQuantity\": ");
+
+			sb.append(sku.getMaxOrderQuantity());
+		}
+
+		if (sku.getMinOrderQuantity() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"minOrderQuantity\": ");
+
+			sb.append(sku.getMinOrderQuantity());
 		}
 
 		if (sku.getPrice() != null) {
@@ -105,11 +149,36 @@ public class SkuSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
+		if (sku.getAllowedOrderQuantities() == null) {
+			map.put("allowedOrderQuantities", null);
+		}
+		else {
+			map.put(
+				"allowedOrderQuantities",
+				String.valueOf(sku.getAllowedOrderQuantities()));
+		}
+
 		if (sku.getAvailability() == null) {
 			map.put("availability", null);
 		}
 		else {
 			map.put("availability", String.valueOf(sku.getAvailability()));
+		}
+
+		if (sku.getMaxOrderQuantity() == null) {
+			map.put("maxOrderQuantity", null);
+		}
+		else {
+			map.put(
+				"maxOrderQuantity", String.valueOf(sku.getMaxOrderQuantity()));
+		}
+
+		if (sku.getMinOrderQuantity() == null) {
+			map.put("minOrderQuantity", null);
+		}
+		else {
+			map.put(
+				"minOrderQuantity", String.valueOf(sku.getMinOrderQuantity()));
 		}
 
 		if (sku.getPrice() == null) {
@@ -145,10 +214,28 @@ public class SkuSerDes {
 		protected void setField(
 			Sku sku, String jsonParserFieldName, Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "availability")) {
+			if (Objects.equals(jsonParserFieldName, "allowedOrderQuantities")) {
+				if (jsonParserFieldValue != null) {
+					sku.setAllowedOrderQuantities(
+						toStrings((Object[])jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "availability")) {
 				if (jsonParserFieldValue != null) {
 					sku.setAvailability(
 						AvailabilitySerDes.toDTO((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "maxOrderQuantity")) {
+				if (jsonParserFieldValue != null) {
+					sku.setMaxOrderQuantity(
+						Integer.valueOf((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "minOrderQuantity")) {
+				if (jsonParserFieldValue != null) {
+					sku.setMinOrderQuantity(
+						Integer.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "price")) {

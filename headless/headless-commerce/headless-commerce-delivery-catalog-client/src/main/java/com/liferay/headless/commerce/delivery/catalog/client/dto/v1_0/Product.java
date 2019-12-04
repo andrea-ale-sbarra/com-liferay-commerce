@@ -30,28 +30,6 @@ import javax.annotation.Generated;
 @Generated("")
 public class Product {
 
-	public Integer[] getAllowedOrderQuantities() {
-		return allowedOrderQuantities;
-	}
-
-	public void setAllowedOrderQuantities(Integer[] allowedOrderQuantities) {
-		this.allowedOrderQuantities = allowedOrderQuantities;
-	}
-
-	public void setAllowedOrderQuantities(
-		UnsafeSupplier<Integer[], Exception>
-			allowedOrderQuantitiesUnsafeSupplier) {
-
-		try {
-			allowedOrderQuantities = allowedOrderQuantitiesUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Integer[] allowedOrderQuantities;
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -155,27 +133,6 @@ public class Product {
 
 	protected Long id;
 
-	public Integer getMaxOrderQuantity() {
-		return maxOrderQuantity;
-	}
-
-	public void setMaxOrderQuantity(Integer maxOrderQuantity) {
-		this.maxOrderQuantity = maxOrderQuantity;
-	}
-
-	public void setMaxOrderQuantity(
-		UnsafeSupplier<Integer, Exception> maxOrderQuantityUnsafeSupplier) {
-
-		try {
-			maxOrderQuantity = maxOrderQuantityUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Integer maxOrderQuantity;
-
 	public String getMetaDescription() {
 		return metaDescription;
 	}
@@ -238,27 +195,6 @@ public class Product {
 	}
 
 	protected String metaTitle;
-
-	public Integer getMinOrderQuantity() {
-		return minOrderQuantity;
-	}
-
-	public void setMinOrderQuantity(Integer minOrderQuantity) {
-		this.minOrderQuantity = minOrderQuantity;
-	}
-
-	public void setMinOrderQuantity(
-		UnsafeSupplier<Integer, Exception> minOrderQuantityUnsafeSupplier) {
-
-		try {
-			minOrderQuantity = minOrderQuantityUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Integer minOrderQuantity;
 
 	public Date getModifiedDate() {
 		return modifiedDate;
