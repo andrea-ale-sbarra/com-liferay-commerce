@@ -340,6 +340,25 @@ public class Product {
 
 	protected Sku[] skus;
 
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	public void setSlug(UnsafeSupplier<String, Exception> slugUnsafeSupplier) {
+		try {
+			slug = slugUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String slug;
+
 	public String[] getTags() {
 		return tags;
 	}
@@ -360,25 +379,6 @@ public class Product {
 	}
 
 	protected String[] tags;
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public void setUrl(UnsafeSupplier<String, Exception> urlUnsafeSupplier) {
-		try {
-			url = urlUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String url;
 
 	public String getUrlImage() {
 		return urlImage;

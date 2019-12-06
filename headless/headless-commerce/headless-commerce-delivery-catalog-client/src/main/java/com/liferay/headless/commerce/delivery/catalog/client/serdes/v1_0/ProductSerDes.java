@@ -262,6 +262,20 @@ public class ProductSerDes {
 			sb.append("]");
 		}
 
+		if (product.getSlug() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"slug\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(product.getSlug()));
+
+			sb.append("\"");
+		}
+
 		if (product.getTags() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -284,20 +298,6 @@ public class ProductSerDes {
 			}
 
 			sb.append("]");
-		}
-
-		if (product.getUrl() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"url\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(product.getUrl()));
-
-			sb.append("\"");
 		}
 
 		if (product.getUrlImage() != null) {
@@ -442,18 +442,18 @@ public class ProductSerDes {
 			map.put("skus", String.valueOf(product.getSkus()));
 		}
 
+		if (product.getSlug() == null) {
+			map.put("slug", null);
+		}
+		else {
+			map.put("slug", String.valueOf(product.getSlug()));
+		}
+
 		if (product.getTags() == null) {
 			map.put("tags", null);
 		}
 		else {
 			map.put("tags", String.valueOf(product.getTags()));
-		}
-
-		if (product.getUrl() == null) {
-			map.put("url", null);
-		}
-		else {
-			map.put("url", String.valueOf(product.getUrl()));
 		}
 
 		if (product.getUrlImage() == null) {
@@ -574,14 +574,14 @@ public class ProductSerDes {
 						));
 				}
 			}
+			else if (Objects.equals(jsonParserFieldName, "slug")) {
+				if (jsonParserFieldValue != null) {
+					product.setSlug((String)jsonParserFieldValue);
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "tags")) {
 				if (jsonParserFieldValue != null) {
 					product.setTags(toStrings((Object[])jsonParserFieldValue));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "url")) {
-				if (jsonParserFieldValue != null) {
-					product.setUrl((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "urlImage")) {
@@ -600,9 +600,11 @@ public class ProductSerDes {
 	private static String _escape(Object object) {
 		String string = String.valueOf(object);
 
-		string = string.replace("\\", "\\\\");
+		for (String[] strings : BaseJSONParser.JSON_ESCAPE_STRINGS) {
+			string = string.replace(strings[0], strings[1]);
+		}
 
-		return string.replace("\"", "\\\"");
+		return string;
 	}
 
 	private static String _toJSON(Map<String, ?> map) {

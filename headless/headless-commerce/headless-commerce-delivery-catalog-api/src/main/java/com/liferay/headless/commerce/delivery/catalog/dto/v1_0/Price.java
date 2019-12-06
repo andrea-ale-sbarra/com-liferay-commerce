@@ -100,6 +100,34 @@ public class Price {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String promoPrice;
 
+	@Schema
+	public String getTierPrice() {
+		return tierPrice;
+	}
+
+	public void setTierPrice(String tierPrice) {
+		this.tierPrice = tierPrice;
+	}
+
+	@JsonIgnore
+	public void setTierPrice(
+		UnsafeSupplier<String, Exception> tierPriceUnsafeSupplier) {
+
+		try {
+			tierPrice = tierPriceUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String tierPrice;
+
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -151,6 +179,20 @@ public class Price {
 			sb.append("\"");
 
 			sb.append(_escape(promoPrice));
+
+			sb.append("\"");
+		}
+
+		if (tierPrice != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"tierPrice\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(tierPrice));
 
 			sb.append("\"");
 		}

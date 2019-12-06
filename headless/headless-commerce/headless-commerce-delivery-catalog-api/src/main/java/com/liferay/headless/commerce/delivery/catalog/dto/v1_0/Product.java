@@ -470,6 +470,32 @@ public class Product {
 	protected Sku[] skus;
 
 	@Schema
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
+	@JsonIgnore
+	public void setSlug(UnsafeSupplier<String, Exception> slugUnsafeSupplier) {
+		try {
+			slug = slugUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String slug;
+
+	@Schema
 	public String[] getTags() {
 		return tags;
 	}
@@ -496,32 +522,6 @@ public class Product {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String[] tags;
-
-	@Schema
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	@JsonIgnore
-	public void setUrl(UnsafeSupplier<String, Exception> urlUnsafeSupplier) {
-		try {
-			url = urlUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String url;
 
 	@Schema
 	public String getUrlImage() {
@@ -781,6 +781,20 @@ public class Product {
 			sb.append("]");
 		}
 
+		if (slug != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"slug\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(slug));
+
+			sb.append("\"");
+		}
+
 		if (tags != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -803,20 +817,6 @@ public class Product {
 			}
 
 			sb.append("]");
-		}
-
-		if (url != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"url\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(url));
-
-			sb.append("\"");
 		}
 
 		if (urlImage != null) {

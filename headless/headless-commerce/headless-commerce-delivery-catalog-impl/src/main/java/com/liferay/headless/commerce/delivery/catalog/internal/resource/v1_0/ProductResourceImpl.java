@@ -17,15 +17,17 @@ package com.liferay.headless.commerce.delivery.catalog.internal.resource.v1_0;
 import com.liferay.commerce.product.catalog.CPCatalogEntry;
 import com.liferay.commerce.product.catalog.CPQuery;
 import com.liferay.commerce.product.data.source.CPDataSourceResult;
+import com.liferay.commerce.product.model.CPDefinition;
 import com.liferay.commerce.product.model.CommerceCatalog;
 import com.liferay.commerce.product.model.CommerceChannel;
+import com.liferay.commerce.product.service.CPDefinitionService;
 import com.liferay.commerce.product.service.CommerceCatalogService;
 import com.liferay.commerce.product.service.CommerceChannelService;
 import com.liferay.commerce.product.util.CPDefinitionHelper;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverter;
 import com.liferay.headless.commerce.core.dto.v1_0.converter.DTOConverterRegistry;
 import com.liferay.headless.commerce.delivery.catalog.dto.v1_0.Product;
-import com.liferay.headless.commerce.delivery.catalog.internal.dto.v1_0.converter.CPCatalogEntryDTOConverterContext;
+import com.liferay.headless.commerce.delivery.catalog.internal.dto.v1_0.converter.ProductDTOConverterContext;
 import com.liferay.headless.commerce.delivery.catalog.resource.v1_0.ProductResource;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -61,6 +63,13 @@ import org.osgi.service.component.annotations.ServiceScope;
 	scope = ServiceScope.PROTOTYPE, service = ProductResource.class
 )
 public class ProductResourceImpl extends BaseProductResourceImpl {
+
+	@Override
+	public Product getProduct(@NotNull Long id) throws Exception {
+		CPDefinition cpDefinition = _cpDefinitionService.getCPDefinition(id);
+
+		return super.getProduct(id);
+	}
 
 	@Override
 	public Page<Product> getStoreChannelProductsPage(
@@ -130,7 +139,7 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 
 			products.add(
 				(Product)cpCatalogEntryDTOConverter.toDTO(
-					new CPCatalogEntryDTOConverterContext(
+					new ProductDTOConverterContext(
 						contextAcceptLanguage.getPreferredLocale(),
 						cpCatalogEntry.getCPDefinitionId(), cpCatalogEntry)));
 		}
@@ -146,6 +155,9 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 
 	@Reference
 	private CPDefinitionHelper _cpDefinitionHelper;
+
+	@Reference
+	private CPDefinitionService _cpDefinitionService;
 
 	@Reference
 	private DTOConverterRegistry _dtoConverterRegistry;

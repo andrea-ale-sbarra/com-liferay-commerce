@@ -81,6 +81,20 @@ public class PriceSerDes {
 			sb.append("\"");
 		}
 
+		if (price.getTierPrice() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"tierPrice\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(price.getTierPrice()));
+
+			sb.append("\"");
+		}
+
 		sb.append("}");
 
 		return sb.toString();
@@ -113,6 +127,13 @@ public class PriceSerDes {
 			map.put("promoPrice", String.valueOf(price.getPromoPrice()));
 		}
 
+		if (price.getTierPrice() == null) {
+			map.put("tierPrice", null);
+		}
+		else {
+			map.put("tierPrice", String.valueOf(price.getTierPrice()));
+		}
+
 		return map;
 	}
 
@@ -143,6 +164,11 @@ public class PriceSerDes {
 					price.setPromoPrice((String)jsonParserFieldValue);
 				}
 			}
+			else if (Objects.equals(jsonParserFieldName, "tierPrice")) {
+				if (jsonParserFieldValue != null) {
+					price.setTierPrice((String)jsonParserFieldValue);
+				}
+			}
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
@@ -154,9 +180,11 @@ public class PriceSerDes {
 	private static String _escape(Object object) {
 		String string = String.valueOf(object);
 
-		string = string.replace("\\", "\\\\");
+		for (String[] strings : BaseJSONParser.JSON_ESCAPE_STRINGS) {
+			string = string.replace(strings[0], strings[1]);
+		}
 
-		return string.replace("\"", "\\\"");
+		return string;
 	}
 
 	private static String _toJSON(Map<String, ?> map) {

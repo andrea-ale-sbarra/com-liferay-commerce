@@ -70,6 +70,27 @@ public class Price {
 
 	protected String promoPrice;
 
+	public String getTierPrice() {
+		return tierPrice;
+	}
+
+	public void setTierPrice(String tierPrice) {
+		this.tierPrice = tierPrice;
+	}
+
+	public void setTierPrice(
+		UnsafeSupplier<String, Exception> tierPriceUnsafeSupplier) {
+
+		try {
+			tierPrice = tierPriceUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String tierPrice;
+
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {

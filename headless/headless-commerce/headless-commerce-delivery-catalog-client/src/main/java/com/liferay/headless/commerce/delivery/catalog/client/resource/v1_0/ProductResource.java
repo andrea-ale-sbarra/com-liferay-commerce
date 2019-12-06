@@ -23,6 +23,7 @@ import com.liferay.headless.commerce.delivery.catalog.client.serdes.v1_0.Product
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.Generated;
@@ -37,6 +38,11 @@ public interface ProductResource {
 	public static Builder builder() {
 		return new Builder();
 	}
+
+	public Product getProduct(Long id) throws Exception;
+
+	public HttpInvoker.HttpResponse getProductHttpResponse(Long id)
+		throws Exception;
 
 	public Page<Product> getStoreChannelProductsPage(
 			Long channelId, String filterString, Pagination pagination,
@@ -102,6 +108,65 @@ public interface ProductResource {
 	}
 
 	public static class ProductResourceImpl implements ProductResource {
+
+		public Product getProduct(Long id) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getProductHttpResponse(id);
+
+			String content = httpResponse.getContent();
+
+			_logger.fine("HTTP response content: " + content);
+
+			_logger.fine("HTTP response message: " + httpResponse.getMessage());
+			_logger.fine(
+				"HTTP response status code: " + httpResponse.getStatusCode());
+
+			try {
+				return ProductSerDes.toDTO(content);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw e;
+			}
+		}
+
+		public HttpInvoker.HttpResponse getProductHttpResponse(Long id)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/headless-commerce-delivery-catalog/v1.0/products/{id}",
+				id);
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
 
 		public Page<Product> getStoreChannelProductsPage(
 				Long channelId, String filterString, Pagination pagination,

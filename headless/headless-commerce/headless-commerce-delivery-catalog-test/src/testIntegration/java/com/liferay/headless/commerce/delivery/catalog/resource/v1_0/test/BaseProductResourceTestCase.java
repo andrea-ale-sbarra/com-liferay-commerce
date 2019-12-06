@@ -31,6 +31,7 @@ import com.liferay.headless.commerce.delivery.catalog.client.serdes.v1_0.Product
 import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -190,7 +191,7 @@ public abstract class BaseProductResourceTestCase {
 		product.setName(regex);
 		product.setProductType(regex);
 		product.setShortDescription(regex);
-		product.setUrl(regex);
+		product.setSlug(regex);
 		product.setUrlImage(regex);
 
 		String json = ProductSerDes.toJSON(product);
@@ -207,8 +208,49 @@ public abstract class BaseProductResourceTestCase {
 		Assert.assertEquals(regex, product.getName());
 		Assert.assertEquals(regex, product.getProductType());
 		Assert.assertEquals(regex, product.getShortDescription());
-		Assert.assertEquals(regex, product.getUrl());
+		Assert.assertEquals(regex, product.getSlug());
 		Assert.assertEquals(regex, product.getUrlImage());
+	}
+
+	@Test
+	public void testGetProduct() throws Exception {
+		Product postProduct = testGetProduct_addProduct();
+
+		Product getProduct = productResource.getProduct(postProduct.getId());
+
+		assertEquals(postProduct, getProduct);
+		assertValid(getProduct);
+	}
+
+	protected Product testGetProduct_addProduct() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
+	public void testGraphQLGetProduct() throws Exception {
+		Product product = testGraphQLProduct_addProduct();
+
+		List<GraphQLField> graphQLFields = getGraphQLFields();
+
+		GraphQLField graphQLField = new GraphQLField(
+			"query",
+			new GraphQLField(
+				"product",
+				new HashMap<String, Object>() {
+					{
+						put("id", product.getId());
+					}
+				},
+				graphQLFields.toArray(new GraphQLField[0])));
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+			invoke(graphQLField.toString()));
+
+		JSONObject dataJSONObject = jsonObject.getJSONObject("data");
+
+		Assert.assertTrue(
+			equalsJSONObject(product, dataJSONObject.getJSONObject("product")));
 	}
 
 	@Test
@@ -677,16 +719,16 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("tags", additionalAssertFieldName)) {
-				if (product.getTags() == null) {
+			if (Objects.equals("slug", additionalAssertFieldName)) {
+				if (product.getSlug() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("url", additionalAssertFieldName)) {
-				if (product.getUrl() == null) {
+			if (Objects.equals("tags", additionalAssertFieldName)) {
+				if (product.getTags() == null) {
 					valid = false;
 				}
 
@@ -911,9 +953,9 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("tags", additionalAssertFieldName)) {
+			if (Objects.equals("slug", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						product1.getTags(), product2.getTags())) {
+						product1.getSlug(), product2.getSlug())) {
 
 					return false;
 				}
@@ -921,8 +963,10 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("url", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(product1.getUrl(), product2.getUrl())) {
+			if (Objects.equals("tags", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						product1.getTags(), product2.getTags())) {
+
 					return false;
 				}
 
@@ -1068,9 +1112,9 @@ public abstract class BaseProductResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("url", fieldName)) {
+			if (Objects.equals("slug", fieldName)) {
 				if (!Objects.deepEquals(
-						product.getUrl(), jsonObject.getString("url"))) {
+						product.getSlug(), jsonObject.getString("slug"))) {
 
 					return false;
 				}
@@ -1297,17 +1341,17 @@ public abstract class BaseProductResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("tags")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("url")) {
+		if (entityFieldName.equals("slug")) {
 			sb.append("'");
-			sb.append(String.valueOf(product.getUrl()));
+			sb.append(String.valueOf(product.getSlug()));
 			sb.append("'");
 
 			return sb.toString();
+		}
+
+		if (entityFieldName.equals("tags")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
 		}
 
 		if (entityFieldName.equals("urlImage")) {
@@ -1355,7 +1399,7 @@ public abstract class BaseProductResourceTestCase {
 				productId = RandomTestUtil.randomLong();
 				productType = RandomTestUtil.randomString();
 				shortDescription = RandomTestUtil.randomString();
-				url = RandomTestUtil.randomString();
+				slug = RandomTestUtil.randomString();
 				urlImage = RandomTestUtil.randomString();
 			}
 		};

@@ -47,9 +47,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = "model.class.name=com.liferay.commerce.product.catalog.CPCatalogEntry",
-	service = {CPCatalogEntryDTOConverter.class, DTOConverter.class}
+	service = {ProductDTOConverter.class, DTOConverter.class}
 )
-public class CPCatalogEntryDTOConverter implements DTOConverter {
+public class ProductDTOConverter implements DTOConverter {
 
 	@Override
 	public String getContentType() {
@@ -59,17 +59,15 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 	public Product toDTO(DTOConverterContext dtoConverterContext)
 		throws Exception {
 
-		CPCatalogEntryDTOConverterContext
-			cpCatalogEntryDTOConverterConvertContext =
-				(CPCatalogEntryDTOConverterContext)dtoConverterContext;
+		ProductDTOConverterContext cpCatalogEntryDTOConverterConvertContext =
+			(ProductDTOConverterContext)dtoConverterContext;
 
+		CPDefinition cpDefinition = _cpDefinitionService.getCPDefinition(
+			cpCatalogEntryDTOConverterConvertContext.getResourcePrimKey());
 		CPCatalogEntry cpCatalogEntry =
 			cpCatalogEntryDTOConverterConvertContext.getCpCatalogEntry();
 		String languageId = LanguageUtil.getLanguageId(
 			cpCatalogEntryDTOConverterConvertContext.getLocale());
-
-		CPDefinition cpDefinition = _cpDefinitionService.getCPDefinition(
-			dtoConverterContext.getResourcePrimKey());
 
 		ExpandoBridge expandoBridge = cpDefinition.getExpandoBridge();
 		CProduct cProduct = cpDefinition.getCProduct();
@@ -82,24 +80,24 @@ public class CPCatalogEntryDTOConverter implements DTOConverter {
 		return new Product() {
 			{
 				createDate = cpDefinition.getCreateDate();
-				description = cpCatalogEntry.getDescription();
+				description = cpDefinition.getDescription();
 				expando = expandoBridge.getAttributes();
 				externalReferenceCode = cProduct.getExternalReferenceCode();
-				id = cpCatalogEntry.getCPDefinitionId();
-				metaDescription = cpCatalogEntry.getMetaDescription(languageId);
-				metaKeyword = cpCatalogEntry.getMetaKeywords(languageId);
-				metaTitle = cpCatalogEntry.getMetaTitle(languageId);
+				id = cpDefinition.getCPDefinitionId();
+				metaDescription = cpDefinition.getMetaDescription(languageId);
+				metaKeyword = cpDefinition.getMetaKeywords(languageId);
+				metaTitle = cpDefinition.getMetaTitle(languageId);
 				modifiedDate = cpDefinition.getModifiedDate();
-				name = cpCatalogEntry.getName();
-				productId = cpCatalogEntry.getCProductId();
-				productType = cpCatalogEntry.getProductTypeName();
-				shortDescription = cpCatalogEntry.getShortDescription();
-				skus = _toSkus(
-					cpCatalogEntry.getCPSkus(),
-					cpCatalogEntryDTOConverterConvertContext.getLocale(),
-					cpDefinition.getCPDefinitionId());
+				name = cpDefinition.getName();
+				productId = cpDefinition.getCProductId();
+				productType = cpDefinition.getProductTypeName();
+				shortDescription = cpDefinition.getShortDescription();
+				//				skus = _toSkus(
+				//					cpCatalogEntry.getCPSkus(),
+				//					cpCatalogEntryDTOConverterConvertContext.getLocale(),
+				//					cpDefinition.getCPDefinitionId());
+				slug = cpDefinition.getURL(languageId);
 				tags = _getTags(cpDefinition);
-				url = cpCatalogEntry.getUrl();
 				urlImage = portalURL + cpCatalogEntry.getDefaultImageFileUrl();
 			}
 		};
